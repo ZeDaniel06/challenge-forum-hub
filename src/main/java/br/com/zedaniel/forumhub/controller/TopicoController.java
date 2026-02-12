@@ -1,17 +1,14 @@
 package br.com.zedaniel.forumhub.controller;
 
-import br.com.zedaniel.forumhub.domain.topico.DadosCadastroTopico;
-import br.com.zedaniel.forumhub.domain.topico.Topico;
-import br.com.zedaniel.forumhub.domain.topico.TopicoRepository;
-import br.com.zedaniel.forumhub.domain.topico.TopicoService;
+import br.com.zedaniel.forumhub.domain.topico.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/topicos")
@@ -30,5 +27,13 @@ public class TopicoController {
         repository.save(topico);
 
         return ResponseEntity.ok(dados);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemTopico>> listar(@PageableDefault(size = 10, sort = {"titulo"})Pageable paginacao){
+        var page = repository.findAll(paginacao)
+                .map(DadosListagemTopico::new);
+
+        return ResponseEntity.ok(page);
     }
 }
