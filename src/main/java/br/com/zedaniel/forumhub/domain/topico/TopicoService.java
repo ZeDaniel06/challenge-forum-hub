@@ -3,7 +3,9 @@ package br.com.zedaniel.forumhub.domain.topico;
 import br.com.zedaniel.forumhub.domain.ValidacaoException;
 import br.com.zedaniel.forumhub.domain.autor.AutorRepository;
 import br.com.zedaniel.forumhub.domain.curso.CursoRepository;
+import br.com.zedaniel.forumhub.domain.topico.validacoes.ValidadorAtualizacaoTopico;
 import br.com.zedaniel.forumhub.domain.topico.validacoes.ValidadorCadastroTopico;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,9 @@ public class TopicoService {
 
     @Autowired
     private List<ValidadorCadastroTopico> validadoresDeCadastro;
+
+    @Autowired
+    private List<ValidadorAtualizacaoTopico> validadoresDeAtualizacao;
 
     public Topico construir(DadosCadastroTopico dados){
         if(!autorRepository.existsById(dados.idAutor())){
@@ -48,5 +53,25 @@ public class TopicoService {
         }
 
         return topicoRepository.findById(id).get();
+    }
+
+    public void atualizar(Long id, @Valid DadosAtualizacaoTopico dados) {
+
+        if(topicoRepository.findById(id).isEmpty()){
+            throw new ValidacaoException("Não existe tópico com este id!");
+        }
+
+        if(!cursoRepository.existsById(dados.idCurso())){
+            throw new ValidacaoException("Não existe curso com este id!");
+        }
+
+        var curso = cursoRepository.getReferenceById(dados.idCurso());
+
+        validadoresDeAtualizacao.forEach(v -> v.validar(dados));
+
+        var topico = topicoRepository.getReferenceById(id);
+        topico.atualizar(dados, curso);
+
+
     }
 }

@@ -7,6 +7,7 @@ import br.com.zedaniel.forumhub.domain.curso.Curso;
 import br.com.zedaniel.forumhub.domain.curso.CursoRepository;
 import br.com.zedaniel.forumhub.domain.resposta.Resposta;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -43,4 +44,10 @@ public class Topico {
 
     @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Resposta> respostas;
+
+    public void atualizar(@Valid DadosAtualizacaoTopico dados, Curso curso) {
+        this.curso = curso;
+        this.mensagem = dados.mensagem();
+        this.titulo = dados.titulo();
+    }
 }
