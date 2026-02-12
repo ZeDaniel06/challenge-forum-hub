@@ -1,5 +1,6 @@
 package br.com.zedaniel.forumhub.controller;
 
+import br.com.zedaniel.forumhub.domain.ValidacaoException;
 import br.com.zedaniel.forumhub.domain.topico.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,17 @@ public class TopicoController {
         var topico = repository.getReferenceById(id);
 
         return ResponseEntity.ok(new DadosListagemTopico(topico));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity deletar(@PathVariable Long id){
+        var topico = repository.findById(id);
+        if(topico.isEmpty()){
+            throw new ValidacaoException("Não existe tópico com este id!");
+        }
+
+        repository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
