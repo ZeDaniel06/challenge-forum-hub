@@ -1,10 +1,9 @@
 package br.com.zedaniel.forumhub.controller;
 
-import br.com.zedaniel.forumhub.domain.topico.DadosCadastroTopico;
-import br.com.zedaniel.forumhub.domain.topico.Topico;
-import br.com.zedaniel.forumhub.domain.topico.TopicoRepository;
-import br.com.zedaniel.forumhub.domain.topico.TopicoService;
-import jakarta.validation.Valid;
+import br.com.zedaniel.forumhub.domain.curso.Curso;
+import br.com.zedaniel.forumhub.domain.curso.CursoRepository;
+import br.com.zedaniel.forumhub.domain.curso.CursoService;
+import br.com.zedaniel.forumhub.domain.curso.DadosCadastroCurso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,20 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/topicos")
-public class TopicoController {
+@RequestMapping("/cursos")
+public class CursoController {
 
     @Autowired
-    private TopicoService service;
+    private CursoService service;
 
     @Autowired
-    private TopicoRepository repository;
+    private CursoRepository repository;
 
     @PostMapping
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroTopico dados){
-        var topico = service.construir(dados);
-        repository.save(topico);
+    public ResponseEntity cadastrar(@RequestBody DadosCadastroCurso dados){
+        Curso curso = service.construir(dados);
+        repository.save(curso);
 
         return ResponseEntity.ok(dados);
     }

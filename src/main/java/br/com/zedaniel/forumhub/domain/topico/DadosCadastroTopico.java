@@ -1,7 +1,16 @@
 package br.com.zedaniel.forumhub.domain.topico;
 
-public record DadosCadastroTopico(String titulo,
-                                  String mensagem,
-                                  Long idAutor,
-                                  Long idCurso) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record DadosCadastroTopico(
+        @NotBlank
+        String titulo,
+        @NotBlank
+        String mensagem,
+
+        @NotNull
+        Long idAutor,
+        @NotNull
+        Long idCurso) {
 }
