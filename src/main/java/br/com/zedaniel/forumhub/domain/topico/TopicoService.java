@@ -21,6 +21,9 @@ public class TopicoService {
     private CursoRepository cursoRepository;
 
     @Autowired
+    private TopicoRepository topicoRepository;
+
+    @Autowired
     private List<ValidadorCadastroTopico> validadoresDeCadastro;
 
     public Topico construir(DadosCadastroTopico dados){
@@ -37,5 +40,13 @@ public class TopicoService {
         return new Topico(null, dados.titulo(), dados.mensagem(), LocalDateTime.now(), Status.ABERTO,
                 autorRepository.getReferenceById(dados.idAutor()), cursoRepository.getReferenceById(dados.idCurso()),
                 new ArrayList<>());
+    }
+
+    public Topico retornar(Long id) {
+        if(!topicoRepository.existsById(id)){
+            throw new ValidacaoException("Não existe tópico com o id informado!");
+        }
+
+        return topicoRepository.findById(id).get();
     }
 }
